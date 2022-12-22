@@ -1,83 +1,116 @@
 import './App.css';
 import io from 'socket.io-client';
 import React, { useState, useEffect } from 'react';
+import Lobby from './components/lobby/Lobby'
+import CreateRoom from './components/createRoom/CreateRoom';
+import JoinRoom from './components/joinRoom/JoinRoom';
 
-
-const socket = io('http://localhost:4000')
+const socket = io('http://localhost:4000',{
+query:{
+  "key":"asdasfa9wa90" //asdasfa9wa90
+}
+})
 
 interface messagesList {
   body: string,
-  from: string
+  from: string,
+  room: string
 }
 
 
 function App() {
   const [message, setMessage] = useState<messagesList>({
     body:'',
-    from:''
+    from:'',
+    room:''
   })
+
+  const [joined, setJoined] = useState<string>('')
   const [messages, setMessages] = useState<messagesList[]>([])
-  const [isDisable, setIsDisabel] = useState<boolean>(false)
-  const [name, setName] = useState<string>('')
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
-    socket.emit('message', newmessage(message.body,name))
+
+    socket.emit('message', message)
+
+
     setMessages([newmessage(message.body,'me'), ...messages])
     setMessage(newmessage('',''))
-    setIsDisabel(true)
-  }
 
+  }
   const newmessage = (body: string, from: string) =>{
+
+    const room: string=message.room;
     return {
       body,
-      from
+      from,
+      room
     }
   }
-  useEffect(() => {
+  const handleClick=()=>{
+      socket.emit('joined', 'usuario1')
+  }
 
+
+  useEffect(() => {
+    socket.on('Connect', ()=>{
+      console.log("User connected: "+ socket.id)
+    })
+    socket.on('joined', (data)=>{
+    
+      console.log('joined: '+ data)
+      setJoined(data)
+
+    })
+    
     const receiveMessage = (message: messagesList) =>{
+      console.log("mensaje lo emite: "+ message.from)
       setMessages([message, ...messages])
     }
+
     socket.on('message', receiveMessage)
+
+
 
     return () => {
       socket.off('message', receiveMessage)
     }
+
+
   }, [messages])
 
-  return (
-    <div className="h-screen bg-zinc-800 text-white flex items-center justify-center flex-col rounded">
-      <h1 className='text-2xl font-bold'>Chat</h1>
-      <form onSubmit={handleSubmit} className="bg-zinc-900 p-10">
-        <div className='flex flex-col gap-3'>
-        <input placeholder='user' className='border-2 border-zinc-500 p-2 text-black ' disabled={isDisable} value={name} onChange={e => setName(e.target.value)}/>
-       <div>
-        <input placeholder='message' className='border-2 border-zinc-500 p-2 text-black ' type="text" value={message.body} onChange={e => setMessage(newmessage(e.target.value, ''))} />
-        <button className=' ml-5 bg-blue-500 rounded p-2'>send</button>
-        </div>
-        </div>
-       
+  const versocket = () =>{
+    console.log(socket)
+  }
 
-        <ul className='h-80 overflow-y-auto mt-5'>
+  return (
+    <div> 
+      <Lobby socket={socket}/>
+      
+      <CreateRoom  socket={socket} room={(e: any)=>setMessage({body:'',from:'',room:e})} />
+
+      <JoinRoom socket={socket} />
+      <h1 >Chat</h1>
+      <button onClick={handleClick}>entrar</button>
+
+      <button onClick={versocket}>ver socket</button>
+
+      <p>se acaba de unir: {joined}</p>
+      <form onSubmit={handleSubmit}>
+
+        <input placeholder='message'  type="text" value={message.body} onChange={e => setMessage(newmessage(e.target.value, ''))} />
+        <button >send</button>
+  
+        <ul>
         {messages.map((message, index) => (
-          <li key={index} className={`relative mr-2 p-2 my-2 table rounded-md ${message.from === 'me' ? " bg-sky-700 ml-auto": "bg-black"}`}>
-            <p><strong>{message.from}: </strong>{message.body}</p>
-            <span style={{
-              "position":"absolute",
-              "bottom":"0",
-              "left":"32px",
-              "borderTop": "16px solid transparent",
-              /* border-left: 43px solid rgb(240, 173, 78); */
-              "borderLeft": "18px solid rgb(240, 173, 78)",
-              "borderBottom": "0px solid rgb(240, 173, 78)",
-     }}></span>
+          <li key={index} >
+            <div>
+            <p>{message.from}: {message.body}</p>
+            </div>
           </li>
         ))}
       </ul>
       </form>
-
-
 
     </div>
   );

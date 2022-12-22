@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.medios_de_pago{
+  display: flex;
+  flex-direction: column;
+}
+.medios_de_pago_boton{
+  order:2;
+}
