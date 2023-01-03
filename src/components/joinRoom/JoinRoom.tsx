@@ -1,5 +1,6 @@
 
 import React, { useState} from 'react';
+//import './style.css';
 
 function JoinRoom({socket}: any) {
 
@@ -11,12 +12,12 @@ function JoinRoom({socket}: any) {
   }
 
   return (
-    <div>
+    <div className='CreateRoom'>
       <h1 >Ingrese a su chat</h1>
-      <form onSubmit={handleSubmit} className="bg-zinc-200 p-10">
+      <form onSubmit={handleSubmit} className='CreateForm'>
         <h2>Digite de la sala</h2>
-        <input style={{"color":"black"}} placeholder='Nombre de sala'  value={name} onChange={e => setName(e.target.value)}/>
-        <button >send</button>
+        <input className='CreateInput' style={{"color":"black"}} placeholder='Nombre de sala'  value={name} onChange={e => setName(e.target.value)}/>
+        <button className='CreateButtom' >send</button>
        
       </form>
 

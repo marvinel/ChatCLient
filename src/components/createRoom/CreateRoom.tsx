@@ -1,7 +1,9 @@
 
 import React, { useState} from 'react';
-
+import './style.css';
+import {  useNavigate } from 'react-router-dom';
 function CreateRoom({socket, room}: any) {
+  const navigate = useNavigate();
 
   const [name, setName] = useState<string>('')
 
@@ -9,15 +11,16 @@ function CreateRoom({socket, room}: any) {
     e.preventDefault()
     socket.emit('createroom', name)
     room(name)
+    navigate("/rooms");
   }
 
   return (
-    <div>
+    <div className='CreateRoom'>
       <h1 >Crea una sala de chat</h1>
-      <form onSubmit={handleSubmit} className="bg-zinc-200 p-10">
-        <h2>Digite el nombre de su sala</h2>
-        <input style={{"color":"black"}} placeholder='Room123'   value={name} onChange={e => setName(e.target.value)}/>
-        <button >send</button>
+      <form onSubmit={handleSubmit} className='CreateForm'>
+        <h2>Digite el nombre de su sala: {socket.id}</h2>
+        <input className='CreateInput' style={{"color":"black"}} placeholder='Room123'   value={name} onChange={e => setName(e.target.value)}/>
+        <button className='CreateButtom'>send</button>
        
       </form>
 

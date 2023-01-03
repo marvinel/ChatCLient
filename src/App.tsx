@@ -25,6 +25,8 @@ function App() {
     room:''
   })
 
+  
+
   const [joined, setJoined] = useState<string>('')
   const [messages, setMessages] = useState<messagesList[]>([])
 
@@ -57,8 +59,6 @@ function App() {
       console.log("User connected: "+ socket.id)
     })
     socket.on('joined', (data)=>{
-    
-      console.log('joined: '+ data)
       setJoined(data)
 
     })
@@ -79,9 +79,7 @@ function App() {
 
   }, [messages])
 
-  const versocket = () =>{
-    console.log(socket)
-  }
+
 
   return (
     <div> 
@@ -93,7 +91,6 @@ function App() {
       <h1 >Chat</h1>
       <button onClick={handleClick}>entrar</button>
 
-      <button onClick={versocket}>ver socket</button>
 
       <p>se acaba de unir: {joined}</p>
       <form onSubmit={handleSubmit}>

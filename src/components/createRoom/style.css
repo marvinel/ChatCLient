@@ -1,0 +1,29 @@
+.CreateRoom{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.CreateForm{
+    background-color: black;
+    color: whitesmoke;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.CreateInput{
+    width: 70%;
+    margin-right: 10px;
+}
+
+.CreateButtom{
+    border: none;
+
+    border-radius: 5px;
+    padding: 5px;
+    background-color: cadetblue;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
